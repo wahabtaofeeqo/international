@@ -1,0 +1,30 @@
+.menu-active a {
+	color: #115fd5 !important;
+}
+.banner-area .banner-content {
+	padding-top: 10% !important;
+}
+.banner-area .banner-content h1 {
+	font-size: 400%;
+}
+.banner-area .banner-content .banner-info {
+	margin-bottom: 5%;
+}
+.success-btn {
+  background-color: #00c76f;
+  line-height: 42px;
+  padding-left: 30px;
+  padding-right: 30px;
+  border-radius: 25px;
+  border: none;
+  color: #fff;
+  display: inline-block;
+  font-weight: 500;
+  position: relative;
+  -webkit-transition: all 0.3s ease 0s;
+  -moz-transition: all 0.3s ease 0s;
+  -o-transition: all 0.3s ease 0s;
+  transition: all 0.3s ease 0s;
+  cursor: pointer;
+  position: relative;
+}

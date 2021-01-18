@@ -1,0 +1,46 @@
+.bg-register-image {
+	background-image: url("../img/register.jpg");
+}
+.bg-login-image {
+	background-image: url("../img/register.jpg");
+}
+.bg-password-image {
+	background-image: url("../img/register.jpg");
+}
+.auth-panel {
+	/*padding-top: 5px;*/
+}
+.invalid-feedback {
+	display: block;
+}
+.form-control-user.custom-select {
+	height: 50px !important;
+	padding: 0px !important;
+	padding-left: 1.5rem !important;
+}
+.form-control-user[type="file"] {
+	height: 50px;
+	padding: 0 !important;
+	padding-top: .9em !important;
+	padding-left: 1.5em !important;
+	padding-right: 1.5em !important;
+}
+.btn-return {
+    border-bottom: 1px solid gray;
+    border-radius: 0;
+    box-shadow: 0 .2px black;
+}
+.sidebar .nav-item > .nav-link.router-link-exact-active.router-link-active {
+  font-weight: 700;
+}
+.sidebar-dark .nav-item > .nav-link.router-link-exact-active.router-link-active {
+  color: #fff;
+}
+.sidebar-dark .nav-item > .nav-link.router-link-exact-active.router-link-active i {
+  color: #fff;
+}
+.sidebar .nav-item .collapse .collapse-inner .collapse-item.router-link-exact-active.router-link-active, 
+.sidebar .nav-item .collapsing .collapse-inner .collapse-item.router-link-exact-active.router-link-active {
+    color: #4e73df;
+    font-weight: 700;
+}
