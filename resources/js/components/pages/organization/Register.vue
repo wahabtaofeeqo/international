@@ -127,7 +127,6 @@
 		},
 		created() {
 			this.checkAuthenticatedUser()
-
 			document.title = 'Member Registration | ILA'
 		}
 	}

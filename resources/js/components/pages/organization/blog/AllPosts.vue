@@ -36,7 +36,6 @@
 		data() {
 			return {
 				organization: '',
-
 				posts: []
 			}
 		},
@@ -56,6 +55,7 @@
 		created() {
 			Fire.$on('readyForBlog', (id) => {
 				this.organization = id
+
 				this.fetchPosts()
 			})
 

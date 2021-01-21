@@ -51,6 +51,7 @@
 		<link href="{{ asset('organization/css/style.css') }}" rel="stylesheet">
 	</head>
 	<body data-spy="scroll" data-target=".site-navbar-target" data-offset="300" class="bg-white">
+		
 		<div id="app">
 			<organization-app></organization-app>
 		</div>

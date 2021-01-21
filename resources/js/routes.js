@@ -62,7 +62,7 @@ const routes = [
 				component: OrganizationRegister
 			},
 			{
-				path: '/post/:post_id',
+				path: 'post/:post_id',
 				name: 'OrganizationSinglePost',
 				component: OrganizationSinglePost
 			},

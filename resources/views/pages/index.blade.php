@@ -104,7 +104,6 @@
 					<p>
 						Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut <br> labore  et dolore magna aliqua.
 					</p>
-
 				</div>
 			</div>
 			<div class="row">

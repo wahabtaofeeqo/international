@@ -56,28 +56,21 @@ class PagesController extends Controller
         return view('pages.about.advisoryBoard');
     }
 
-    public function organizationalCharts()
-    {
+    public function organizationalCharts() {
         return view('pages.about.organizationalCharts');
     }
 
-    public function report()
-    {
+    public function report() {
         return view('pages.about.report');
     }
 
-    public function organization($id)
-    {
-
+    public function organization($id) {
     	$organization = Organization::findOrFail($id);
-
     	return view('pages.organization.index')->with('organization', $organization);
     }
 
-    public function unsubscribe($id)
-    {
+    public function unsubscribe($id) {
         $organization = Organization::findOrFail($id);
-
         return $organization;
     }
 }
