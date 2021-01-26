@@ -3,7 +3,7 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-md-4">
-					<img :src="'/public/images/logos/'+$parent.organization.logo" alt="logo" width="75" height="75" class="img-fluid mb-3">
+					<img :src="'/images/logos/'+$parent.organization.logo" alt="logo" width="75" height="75" class="img-fluid mb-3">
 
 					<h3>About {{ $parent.organization.name }}</h3>
 					<p>{{ $parent.organization.slogan }}</p>

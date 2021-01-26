@@ -107,34 +107,35 @@
 				</div>
 			</div>
 			<div class="row">
-			@foreach($posts as $post)
+				@foreach($posts as $post)
 
-						<div class="single-blog col-lg-4 col-md-4">
-					<div class="thumb">
-						<img class="f-img img-fluid mx-auto" src="{{ asset("images/posts/$post->featured_image") }}" alt="">
-					</div>
-					<div class="bottom d-flex justify-content-between align-items-center flex-wrap">
-						<div>
-							<img class="img-fluid" src="{{ asset('images/posts/$post->featured_image') }}" alt="">
-						 	</div>
-						<div class="meta">
-						{{$post->created_at}}
-
-							<!-- <span class="fa fa-heart"></span> 15 -->
-							<span class="fa fa-comment"></span> {{$post->comments_count}}
+					<div class="single-blog col-lg-4 col-md-4">
+						<div class="thumb">
+							<img class="f-img img-fluid mx-auto" src="{{ asset("images/posts/$post->featured_image") }}">
 						</div>
+						<div class="bottom d-flex justify-content-between align-items-center flex-wrap">
+							<div>
+								<img class="img-fluid" src="{{ asset('images/posts/$post->featured_image') }}" alt="">
+							 </div>
+
+							<div class="meta">
+								{{$post->created_at}}
+								<!-- <span class="fa fa-heart"></span> 15 -->
+								<span class="fa fa-comment"></span> {{$post->comments_count}}
+							</div>
+						</div>
+
+						<a href="/organization/{{$post->organization_id}}/post/{{$post->id}}">
+							<h4>{{$post->title}} </h4>
+						</a>
+
+						<p>
+							{{ strip_tags(substr($post->content,0,150))	}}
+						</p>
 					</div>
-					<a href="/organization/{{$post->organization_id}}/post/{{$post->id}}">
-						<h4>{{$post->title}} </h4>
-					</a>
-					<p>
-					{{ strip_tags(substr($post->content,0,150))	}}
-					</p>
-				</div>
-					@endforeach
-
-
+				@endforeach
 			</div>
+
 			<div class="row justify-content-center">
 				<a href="/organization/1" class="primary-btn">Show More</a>
 			</div>

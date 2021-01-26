@@ -51,7 +51,7 @@
 									<h1  data-aos="fade-up" data-aos-delay="100">
 										Learn About {{ organization.name }}
 										<sup>
-											<img :src="'/public/images/logos/'+organization.logo" alt="logo" width="40" height="40" class="img-fluid">
+											<img :src="'/images/logos/'+organization.logo" alt="logo" width="40" height="40" class="img-fluid">
 										</sup>
 									</h1>
 									<p class="mb-4"  data-aos="fade-up" data-aos-delay="200">{{ organization.description }}</p>
@@ -99,7 +99,7 @@
 				<div class="row" v-if="visibleMembers.length > 0">
 					<div class="col-md-6 col-lg-4 mb-4" data-aos="fade-up" data-aos-delay="100" v-for="member in visibleMembers">
 						<div class="teacher text-center">
-							<img :src="'/public/images/avatars/'+member.user.photo" alt="Photo" class="img-fluid w-50 rounded-circle mx-auto mb-4" style="width: 150px; height: 150px;">
+							<img :src="'/images/avatars/'+member.user.photo" alt="Photo" class="img-fluid w-50 rounded-circle mx-auto mb-4" style="width: 150px; height: 150px;">
 							<div class="py-2">
 								<h3 class="text-black">{{ member.user.name }}</h3>
 								<p class="position">{{ member.user.role.name.toUpperCase() }}</p>

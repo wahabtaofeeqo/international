@@ -6,7 +6,7 @@
 					<div class="course bg-white h-100 align-self-stretch">
 						<figure class="m-0">
 							<a :href="'/organization/'+organization+'/post/'+post.id">
-								<img class="img-fluid" alt="Image" :src="'/public/images/posts/'+post.featured_image">
+								<img class="img-fluid" alt="Image" :src="'/images/posts/'+post.featured_image">
 							</a>
 						</figure>
 						<div class="course-inner-text py-4 px-4">
