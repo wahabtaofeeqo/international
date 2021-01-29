@@ -44,8 +44,8 @@ class PostController extends Controller
     /*
      * Display posts in dashboards
     */
-    public function index()
-    {
+    public function index() {
+        
         if (Auth::user()->isAdmin() || Auth::user()->isSuper()) {
             $posts = Auth::user()->organization->posts()->with('user')->withCount('comments')->get();
         } else {

@@ -22,7 +22,7 @@
 		</header>
 
 		<div class="intro-section single-cover">
-			<div class="slide-1" :style="'background-image: url(/images/posts/'+post.featured_image+');'" data-stellar-background-ratio="0.5">
+			<div class="slide-1" :style="'background-image: url(/public/images/posts/'+post.featured_image+');'" data-stellar-background-ratio="0.5">
 				<div class="container">
 					<div class="row align-items-center">
 						<div class="col-12">
@@ -97,7 +97,7 @@
 						<div class="mb-5 text-center border rounded course-instructor">
 							<h3 class="mb-5 text-black text-uppercase h6 border-bottom pb-3">Writer</h3>
 							<div class="mb-4 text-center">
-								<img :src="'/images/avatars/'+post.user.photo" alt="Photo" class="w-50 rounded-circle mb-4" style="width: 150px; height: 150px;">
+								<img :src="'/public/images/avatars/'+post.user.photo" alt="Photo" class="w-50 rounded-circle mb-4" style="width: 150px; height: 150px;">
 								<h3 class="h5 text-black mb-4">{{ post.user.name }}</h3>
 								<p>
 									<a class="btn btn-primary btn-pill btn-sm mr-2" :href="'mailto:'+post.user.email"><i class="icon-contact_mail"></i></a>
