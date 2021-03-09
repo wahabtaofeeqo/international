@@ -123,3 +123,6 @@ Route::get('/register/{path}', function() {
 })->where('/path', '([A-Z\d-\/_.]+)?')->middleware('auth');
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+Route::get('/test', 'PagesController@test');
+Route::post('/test', 'PagesController@testPost');

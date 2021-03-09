@@ -6,6 +6,12 @@ use Illuminate\Http\Request;
 
 use App\Models\Post;
 use App\Models\Organization;
+use App\Imports\CityImport;
+use Excel;
+
+
+ini_set('memory_limit', '-1');
+ini_set('max_execution_time', 0); 
 
 class PagesController extends Controller
 {
@@ -13,18 +19,21 @@ class PagesController extends Controller
     public function index()
     {
 
-            $posts = '';
-            $id = 1;
-             $organization = Organization::find($id);
+        $posts = array();
+        $id = 1;
+        $organization = Organization::find($id);
 
-             $posts = $organization->posts()
+        if ($organization) {
+            $posts = $organization->posts()
                 ->withCount('comments')
                 ->where('status', 1)
                 ->latest()
                 ->paginate(3);
+        }
 
     	return view('pages.index')->with('posts', $posts);
     }
+    
     public function donate()
     {
         return view('pages.donate');
@@ -72,5 +81,19 @@ class PagesController extends Controller
     public function unsubscribe($id) {
         $organization = Organization::findOrFail($id);
         return $organization;
+    }
+
+    public function test() {
+        return view('import');
+    }
+
+    public function testPost(Request $request) {
+        
+        $request->validate([
+            'file' => 'required']);
+
+        Excel::import(new CityImport, $request->file('file'));
+
+        return "Done";
     }
 }

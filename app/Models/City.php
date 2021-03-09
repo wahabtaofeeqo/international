@@ -12,7 +12,7 @@ class City extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'latitude', 'longitude', 'region_id'
+        'name', 'latitude', 'longitude', 'region_id', 'country_id'
     ];
 
     /*
