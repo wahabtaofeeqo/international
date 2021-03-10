@@ -13,7 +13,7 @@ class CityController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:api')->except('index', 'showRegionCities');
+        //$this->middleware('auth:api')->except('index', 'showRegionCities');
     }
 
     /**
@@ -115,5 +115,12 @@ class CityController extends Controller
             'region',
             'region.country'
         ])->where('region_id', $id)->get();
+    }
+
+    public function showCountryCities($id) {
+        return City::with([
+            'region',
+            'region.country'
+        ])->where('country_id', $id)->get();
     }
 }

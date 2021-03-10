@@ -5,15 +5,18 @@
                 <div class="col-sm-6 mb-3 mb-sm-0">
                     <select class="form-control form-control-user custom-select" v-model="selectedCountry" @change="handleCountry" required>
                         <option value="" disabled>Select your country</option>
-                        <option :value="country" v-for="country in countries" :key="country.id">{{ country.name }}</option>
+                        <option :value="country" v-for="country in countries" :key="country.id">
+                            {{ country.name }}
+                        </option>
                     </select>
                 </div>
                 <div class="col-sm-6">
-                    <select class="form-control form-control-user custom-select" v-model="selectedRegion" @change="fetchCities" required>
+                    <!-- <select class="form-control form-control-user custom-select" v-model="selectedRegion" @change="fetchCities" required>
                         <option value="" disabled>Select your region</option>
                         <option :value="region" v-for="region in regions" :key="region.id"> {{ region.name }}</option>
-                    </select>
-                    <has-error :form="form" field="region"></has-error>
+                    </select> -->
+                    <input type="text" class="form-control form-control-user" id="region" placeholder="Enter Region" v-model="form.region">
+                    <!-- <has-error :form="form" field="region"></has-error> -->
                 </div>
             </div>
             <div class="form-group row">
@@ -106,6 +109,7 @@
             getUser() {
                 axios.get(this.url)
                 .then(response => {
+                    console.log(response);
                     this.fetchCountries()
                     this.fetchLanguages()
 
@@ -116,6 +120,7 @@
                     // document.location.href = '/register'
                 })
             },
+
             fetchCountries() {
                 axios.get('/api/country')
                 .then(response => {
@@ -125,6 +130,7 @@
                     console.log('Could not fetch list of countries ' + err)
                 })
             },
+
             fetchRegions() {
                 axios.get('/api/region/country/'+this.selectedCountry.id)
                 .then(response => {
@@ -134,8 +140,19 @@
                     console.log('Could not fetch list of regions ' + err)
                 })
             },
+
+            // fetchCities() {
+            //     axios.get('/api/city/region/'+this.selectedRegion.id)
+            //     .then(response => {
+            //         this.cities = response.data
+            //     })
+            //     .catch(err => {
+            //         console.log('Could not fetch list of cities ' + err)
+            //     })
+            // },
+
             fetchCities() {
-                axios.get('/api/city/region/'+this.selectedRegion.id)
+                axios.get('/api/city/country/'+this.selectedCountry.id)
                 .then(response => {
                     this.cities = response.data
                 })
@@ -143,6 +160,7 @@
                     console.log('Could not fetch list of cities ' + err)
                 })
             },
+
             fetchLanguages() {
                 axios.get('/api/language')
                 .then(response => {
@@ -200,7 +218,8 @@
                 })
             },
             handleCountry() {
-                this.fetchRegions()
+                //this.fetchRegions()
+                this.fetchCities();
                 this.getPhoneIndex()
             },
         },

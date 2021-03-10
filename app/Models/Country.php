@@ -18,16 +18,18 @@ class Country extends Model
     /*
 	 * Get the regions associated with the country
     */
-    public function regions()
-    {
+    public function regions() {
     	return $this->hasMany(Region::class);
     }
 
     /*
 	 * Get the cities associated with the organization
     */
-    public function cities()
-    {
+    public function cities() {
     	return $this->hasManyThrough(City::class, Region::class);
+    }
+
+    public function city() {
+        return $this->hasMany(City::class);
     }
 }

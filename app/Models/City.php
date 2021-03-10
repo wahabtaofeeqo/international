@@ -23,6 +23,10 @@ class City extends Model
         return $this->belongsTo(Region::class);
     }
 
+    public function country() {
+        return $this->belongsTo(Country::class);
+    }
+
     /*
      * Get the users in the city
     */

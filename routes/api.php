@@ -96,3 +96,4 @@ Route::prefix('counter')->group(function () {
 
 Route::get('/region/country/{id}', 'General\RegionController@showCountryRegions')->where('id', '[0-9]+');
 Route::get('/city/region/{id}', 'General\CityController@showRegionCities')->where('id', '[0-9]+');
+Route::get('/city/country/{id}', 'General\CityController@showCountryCities')->where('id', '[0-9]+');
