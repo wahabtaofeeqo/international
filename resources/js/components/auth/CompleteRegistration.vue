@@ -195,7 +195,7 @@
                     container: this.$parent.$refs.registration
                 })
 
-                this.form.put(this.url+this.user.id)
+                this.form.put(this.url + this.user.id)
                 .then(response => {
                     Swal.fire({
                         type: 'success',
