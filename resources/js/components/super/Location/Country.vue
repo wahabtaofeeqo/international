@@ -30,27 +30,47 @@
 
 			<div class="card-body">
 				<div class="small text-danger text-right">Careful with deletes though, all registered entities in that location will be deleted as well.</div>
-				<table class="table table-borderless" v-if="countries.length > 0">
-					<thead>
-						<tr>
-							<th>#</th>
-							<th>Name</th>
-							<th>Phone Index</th>
-							<th></th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr v-for="(country, index) in countries">
-							<td>{{ index+1 }}</td>
-							<td>{{ country.name }}</td>
-							<td>{{ country.phone_index }}</td>
-							<td>
-								<button class="btn btn-sm btn-primary shadow" @click="editCountry(country)">Edit</button>
-								<button class="btn btn-sm btn-danger shadow" @click="deleteCountry(country.id)">Delete</button>
-							</td>
-						</tr>
-					</tbody>
-				</table>
+
+				<div v-if="countries.length > 0">
+					<table class="table table-borderless">
+						<thead>
+							<tr>
+								<th>#</th>
+								<th>Name</th>
+								<th>Phone Index</th>
+								<th></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr v-for="(country, index) in countries">
+								<td>{{ index+1 }}</td>
+								<td>{{ country.name }}</td>
+								<td>{{ country.phone_index }}</td>
+								<td>
+									<button class="btn btn-sm btn-primary shadow" @click="editCountry(country)">Edit</button>
+									<button class="btn btn-sm btn-danger shadow" @click="deleteCountry(country.id)">Delete</button>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+
+					<!-- Pagination -->
+					<paginate
+						:page-count="pagination.last_page || 0"
+						:page-range="5"
+						:margin-pages="5"
+						:click-handler="fetchPaginateWithIndex"
+						:prev-text="'Prev'"
+						:next-text="'Next'"
+						:container-class="'pagination'"
+						:page-class="'page-item'"
+						:page-link-class="'page-link'"
+						:prev-class="'page-item'"
+						:prev-link-class="'page-link'"
+						:next-class="'page-item'"
+						:next-link-class="'page-link'">
+					</paginate>
+				</div>
 
 				<div class="card border-left-primary shadow h-100 py-2" v-else>
 					<div class="card-body">
@@ -79,19 +99,43 @@
 					phone_index: ''
 				}),
 
-				edit: false
+				edit: false,
+
+				pagination: {},
+
+				url: '/api/country',
 			}
 		},
 		methods: {
 			fetchCountries() {
-                axios.get('/api/country')
+                axios.get(this.url)
                 .then(response => {
-                    this.countries = response.data
+                    this.countries = response.data.data;
+                    this.makePagination(response.data)
                 })
                 .catch(err => {
                     console.log('Could not fetch list of countries ' + err)
                 })
             },
+
+            makePagination(data) {
+                let pagination = {
+                    current_page: data.current_page,
+                    last_page: data.last_page,
+                    next_page_url: data.next_page_url,
+                    prev_page_url: data.prev_page_url,
+                    total_items: data.total,
+                };
+
+                this.pagination = pagination;
+                //console.log(pagination);
+            }, 
+
+            fetchPaginateWithIndex(pageno) {
+                this.url = '/api/country?page='+pageno;
+                this.fetchCountries();
+            },
+
             registerCountry() {
             	const loader = this.$loading.show({
             		container: this.$refs.formContainer

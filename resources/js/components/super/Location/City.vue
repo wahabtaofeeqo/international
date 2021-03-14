@@ -12,15 +12,19 @@
 				<form class="user" @submit.prevent="edit ? updateCity() : registerCity()" @keydown="form.onKeydown($event)">
 					<div class="form-group">
 						<div class="input-group">
-							<select name="country" id="country" class="form-control form-control-user custom-select" v-model="selectedCountry" @change="fetchRegions" required>
+							<select name="country" id="country" class="form-control form-control-user custom-select" v-model="form.country" @change="fetchRegions" required>
 								<option value="" disabled>Select a country</option>
 								<option :value="country" v-for="country in countries" :key="country.id">{{ country.name }}</option>
 							</select>
 
-							<select name="region" id="region" class="form-control form-control-user custom-select" :class="{ 'is-invalid': form.errors.has('region') }" v-model="form.region" required>
+							<!-- <select name="region" id="region" class="form-control form-control-user custom-select" :class="{ 'is-invalid': form.errors.has('region') }" v-model="form.region" required>
 								<option value="" disabled>Select a region</option>
 								<option :value="region" v-for="region in regions" :key="region.id">{{ region.name }}</option>
-							</select>
+							</select> -->
+
+							<input type="text" class="form-control form-control-user" id="test" placeholder="Start Typing" @change="getCities" v-model="city">
+
+							<input type="text" class="form-control form-control-user" id="region" placeholder="Enter Region" v-model="form.region">
 
 							<input type="text" name="" id="name" class="form-control form-control-user" :class="{ 'is-invalid': form.errors.has('name') }" v-model.trim="form.name" placeholder="Name" required>
 
@@ -49,29 +53,49 @@
 			<div class="card-body">
 				<div class="small text-danger text-right">Careful with deletes though, all registered entities in that location will be deleted as well.</div>
 				
-				<table class="table table-borderless" v-if="cities.length > 0">
-					<thead>
-						<tr>
-							<th>#</th>
-							<th>Name</th>
-							<th>Region</th>
-							<th>Country</th>
-							<th></th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr v-for="(city, index) in cities">
-							<td>{{ index+1 }}</td>
-							<td>{{ city.name }}</td>
-							<td>{{ city.region.name }}</td>
-							<td>{{ city.region.country.name }}</td>
-							<td>
-								<button class="btn btn-sm btn-primary shadow" @click="editCity(city)">Edit</button>
-								<button class="btn btn-sm btn-danger shadow" @click="deleteCity(city.id)">Delete</button>
-							</td>
-						</tr>
-					</tbody>
-				</table>
+				<div v-if="cities.length > 0">
+					<table class="table table-borderless">
+						<thead>
+							<tr>
+								<th>#</th>
+								<th>Name</th>
+								<!-- <th>Region</th> -->
+								<th>Country</th>
+								<th></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr v-for="(city, index) in cities">
+								<td>{{ index+1 }}</td>
+								<td>{{ city.name }}</td>
+								<!-- <td v-if="city.region != null">{{ city.region.name }}</td>
+								<td v-if="city.region != null"> </td> -->
+								<td>{{ city.country.name }}</td>
+								<td>
+									<button class="btn btn-sm btn-primary shadow" @click="editCity(city)">Edit</button>
+									<button class="btn btn-sm btn-danger shadow" @click="deleteCity(city.id)">Delete</button>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+
+					<!-- Pagination -->
+					<paginate
+						:page-count="pagination.last_page || 0"
+						:page-range="5"
+						:margin-pages="5"
+						:click-handler="fetchPaginateWithIndex"
+						:prev-text="'Prev'"
+						:next-text="'Next'"
+						:container-class="'pagination'"
+						:page-class="'page-item'"
+						:page-link-class="'page-link'"
+						:prev-class="'page-item'"
+						:prev-link-class="'page-link'"
+						:next-class="'page-item'"
+						:next-link-class="'page-link'">
+					</paginate>
+				</div>
 
 				<div class="card border-left-primary shadow h-100 py-2" v-else>
 					<div class="card-body">
@@ -101,27 +125,63 @@
 					name: '',
 					latitude: '',
 					longitude: '',
-					region: ''
+					region: '',
+					country: ''
 				}),
+
+				city: '',
 
 				selectedCountry: '',
 
 				edit: false,
 				geocoder: false,
+
+				pagination: {},
+
+				url: "/api/city",
 			}
 		},
 		methods: {
+
+			getCities() {
+				console.log(this.city);
+				
+				if (this.city.length > 2) {
+					axios.get('/api/cities/' + this.city)
+					.then(response => {
+						console.log(response);
+					})
+					.catch(err => {
+						console.log(err);
+					})
+				}
+			},
+
 			fetchCountries() {
                 axios.get('/api/country')
                 .then(response => {
-                    this.countries = response.data
+                    this.countries = response.data.data;
                 })
                 .catch(err => {
                     console.log('Could not fetch list of countries ' + err)
                 })
             },
+
+            makePagination(data) {
+                let pagination = {
+                    current_page: data.current_page,
+                    last_page: data.last_page,
+                    next_page_url: data.next_page_url,
+                    prev_page_url: data.prev_page_url,
+                    total_items: data.total,
+                };
+
+                this.pagination = pagination;
+                //console.log(pagination);
+            }, 
+
 			fetchRegions() {
-                axios.get('/api/region/country/'+this.selectedCountry.id)
+                axios.get('/api/region/country/'+this.form.country.id)
                 .then(response => {
                     this.regions = response.data
                 })
@@ -129,20 +189,28 @@
                     console.log('Could not fetch list of regions ' + err)
                 })
             },
+
             fetchCities() {
-                axios.get('/api/city')
+                axios.get(this.url)
                 .then(response => {
-                    this.cities = response.data
+                    this.cities = response.data.data;
+                    this.makePagination(response.data);
                 })
                 .catch(err => {
                     console.log('Could not fetch list of cities ' + err)
                 })
             },
+
+            fetchPaginateWithIndex(pageno) {
+                this.url = '/api/city?page='+pageno;
+                this.fetchCities();
+            },
+
             registerCity() {
             	if (this.form.latitude == '' || this.form.longitude == '') {
             		const loader = this.$loading.show()
 
-	            	fetch('https://geocode.xyz/' + this.form.region.name +'?json=1')
+	            	fetch('https://geocode.xyz/' + this.form.region +'?json=1')
 	            	.then(response => {
 	            		response.json()
 	            		.then(value => {
@@ -172,6 +240,8 @@
             		container: this.$refs.formContainer
             	})
 
+            	console.log(this.form);
+
             	this.form.post('/api/city')
             	.then(response => {
             		Toast.fire({
@@ -188,7 +258,9 @@
             		Toast.fire({
             			type: 'error',
             			title: 'Something went wrong'
-            		})
+            		});
+
+            		console.log(err);
             	})
             	.finally(() => {
             		loader.hide()
@@ -232,6 +304,7 @@
             		loader.hide()
             	})
             },
+
             deleteCity(id) {
             	axios.delete('/api/city/' + id)
             	.then(response => {

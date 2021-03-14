@@ -8,6 +8,7 @@ use App\Models\Post;
 use App\Models\Organization;
 use App\Imports\CityImport;
 use Excel;
+use App\Models\City;
 use Illuminate\Support\Facades\Auth;
 
 ini_set('memory_limit', '-1');
@@ -85,9 +86,7 @@ class PagesController extends Controller
 
     public function test() {
 
-        //print_r(Auth::user());
-
-        echo Auth::user()->city;
+        
         return view('import');
     }
 

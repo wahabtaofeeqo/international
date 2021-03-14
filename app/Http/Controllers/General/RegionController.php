@@ -23,7 +23,7 @@ class RegionController extends Controller
      */
     public function index()
     {
-        return Region::with('country')->orderBy('name', 'ASC')->get();
+        return Region::with('country')->orderBy('name', 'ASC')->paginate();
     }
 
     /**

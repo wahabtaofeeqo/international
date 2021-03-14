@@ -27,7 +27,7 @@ class StoreCity extends FormRequest
             'name' => 'required|string',
             'latitude' => 'required',
             'longitude' => 'required',
-            'region.id' => 'required'
+            'region' => 'required'
         ];
     }
 }

@@ -6,14 +6,14 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 use App\Models\City;
-
+use App\Models\Region;
 use App\Http\Requests\StoreCity;
 
 class CityController extends Controller
 {
     public function __construct()
     {
-        //$this->middleware('auth:api')->except('index', 'showRegionCities');
+        $this->middleware('auth:api')->except('index', 'showRegionCities', 'cities');
     }
 
     /**
@@ -21,9 +21,8 @@ class CityController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-        return City::with('region', 'region.country')->orderBy('name', 'ASC')->get();
+    public function index() {
+        return City::with('country')->orderBy('name', 'ASC')->paginate();
     }
 
     /**
@@ -42,7 +41,9 @@ class CityController extends Controller
         $city->name = $request->name;
         $city->latitude = $request->latitude;
         $city->longitude = $request->longitude;
-        $city->region_id = $request->input('region.id');
+
+        $region = Region::firstOrCreate(['name' => $request->region], ['country_id' => $request->input('country.id')]);
+        $city->region_id = $region->id;
         $city->save();
 
         return response($city, 200);
@@ -122,5 +123,14 @@ class CityController extends Controller
             'region',
             'region.country'
         ])->where('country_id', $id)->get();
+    }
+
+    public function cities($name) {
+
+        return City::with([
+            'region'
+        ])->whereLike('name', $name)->get();
+
+        //return response(array('message' => 'Hello'));
     }
 }

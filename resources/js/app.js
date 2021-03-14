@@ -46,6 +46,10 @@ import VueCharts from 'vue-chartjs'
 import tinymce from 'vue-tinymce-editor'
 Vue.component('tinymce', tinymce)
 
+// Paginator
+import Paginate from 'vuejs-paginate'
+Vue.component('paginate', Paginate)
+
 // Moment
 Vue.use(require('vue-moment'))
 
