@@ -52,10 +52,13 @@
 				<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 					<!-- Sidebar - Brand -->
 					<a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ route('index') }}">
-						<div class="sidebar-brand-icon">
+						<!-- <div class="sidebar-brand-icon">
 							<i class="fas fa-smile"></i>
 						</div>
-						<div class="sidebar-brand-text mx-3">{{ config('app.name') }} <sup><i class="fas fa-sm fa-heartbeat"></i></sup></div>
+						<div class="sidebar-brand-text mx-3">
+							{{ config('app.name') }} ILA<sup><i class="fas fa-sm fa-heartbeat"></i></sup>
+						</div> -->
+						<img src="{{ asset('main/img/logo.png') }}" alt="logo" title="ILA" />
 					</a>
 
 					<hr class="sidebar-divider my-0">

@@ -30,26 +30,32 @@
                             <div class="form-group row">
                                 <div class="col-sm-4 mb-3 mb-sm-0">
                                     <label class="control-label text-primary small" for="country">Country</label>
-                                    <select class="form-control form-control-user custom-select" name="country" id="country" @change="fetchRegions" v-model="form.city.region.country" required>
+                                    <select class="form-control form-control-user custom-select" name="country" id="country" @change="fetchRegions" v-model="form.city.country" required>
                                         <option value="" disabled>Select a country</option>
                                         <option :value="country" v-for="country in countries" :key="country.id">{{ country.name }}</option>
                                     </select>
-                                    <has-error :form="form" field="city.region.country"></has-error>
+                                    <has-error :form="form" field="city.country"></has-error>
                                 </div>
+
                                 <div class="col-sm-4 mb-3 mb-sm-0">
                                     <label class="control-label text-primary small" for="region">Region</label>
-                                    <select class="form-control form-control-user custom-select" name="region" id="region" @change="fetchCities" v-model="form.city.region" required>
+                                    <!-- <select class="form-control form-control-user custom-select" name="region" id="region" @change="fetchCities" v-model="form.city.region" required>
                                         <option value="" disabled>Select a region</option>
                                         <option :value="region" v-for="region in regions" :key="region.id">{{ region.name }}</option>
                                     </select>
-                                    <has-error :form="form" field="city.region"></has-error>
+                                    <has-error :form="form" field="city.region"></has-error> -->
+
+                                    <input type="text" class="form-control form-control-user" id="region" placeholder="Enter Region" v-model="form.city.region == null ? ' ' : form.city.region.name">
                                 </div>
+
                                 <div class="col-sm-4 mb-3 mb-sm-0">
                                     <label class="control-label text-primary small" for="city">City</label>
-                                    <select class="form-control form-control-user custom-select" :class="{ 'is-invalid': form.errors.has('city') }" name="city" id="city" v-model="form.city" required>
+                                   <!--  <select class="form-control form-control-user custom-select" :class="{ 'is-invalid': form.errors.has('city') }" name="city" id="city" v-model="form.city" required>
                                         <option value="" disabled>Select a city</option>
                                         <option :value="city" v-for="city in cities" :key="city.id">{{ city.name }}</option>
                                     </select>
+                                    <has-error :form="form" field="city.city"></has-error> -->
+                                    <input type="text" class="form-control form-control-user" id="city" placeholder="Enter City" v-model="form.city.name" required @input="getCities($event)" @keydown="onKey($event)">
                                     <has-error :form="form" field="city.city"></has-error>
                                 </div>
                             </div>
@@ -58,7 +64,7 @@
                                     <label class="control-label text-primary small" for="phone_number">Phone number</label>
                                     <div class="input-group">
                                         <div class="input-group-prepend">
-                                            <div class="input-group-text">{{ form.city.region.country.phone_index }}</div>
+                                            <div class="input-group-text">{{ form.city.country.phone_index }}</div>
                                         </div>
                                         <input type="text" id="phone_number" name="phone_number" v-model.trim="form.phone_number" placeholder="Valid phone number" class="form-control form-control-user" :class="{ 'is-invalid': form.errors.has('phone_number') }" required>
                                     </div>
@@ -174,11 +180,11 @@
                         region: {
                             id: '',
                             name: '',
-                            country: {
-                                id: '',
-                                name: '',
-                                phone_index: ''
-                            }
+                        },
+                        country: {
+                            id: '',
+                            name: '',
+                            phone_index: ''
                         }
                     },
                     language: {
@@ -214,8 +220,8 @@
             getAuthenticatedUser() {
                 axios.get('/api/user')
                 .then(response => {
-                    this.form.fill(response.data)
 
+                    this.form.fill(response.data)
                     if (response.data.social_profile) {
                         this.socialForm.fill(response.data.social_profile)
                     }
@@ -232,16 +238,114 @@
                 })
             },
             fetchCountries() {
-                axios.get('/api/country')
+                axios.get('/api/all-countries')
                 .then(response => {
                     this.countries = response.data
-
-                    this.fetchRegions()
+                    //console.log(response);
+                    //this.fetchRegions()
                 })
                 .catch(err => {
                     console.log('Could not fetch list of countries ' + err)
                 })
             },
+
+            getCities(e) {
+                if (this.form.city.name.length >= 2) {
+
+                    const url = (this.form.country == '') ? '/api/cities/' + this.form.city : '/api/cities/' + this.form.city.name + '/' + this.form.city.country.id;
+
+                    axios.get(url)
+                    .then(response => {
+                        this.autoComplete(e, response.data);
+                        //console.log(response);
+                    })
+                    .catch(err => {
+                        console.log('Could not fetch list of cities ' + err)
+                    })
+                }
+                else {
+                    this.closeList();
+                }
+            },
+
+            autoComplete: function(e, collection) {
+
+                this.closeList();
+                if (collection.length == 0) return;
+
+                const input = e.target;
+                const wrapper = document.createElement("DIV");
+                wrapper.setAttribute("class", "autocomplete-items");
+
+                const component = this;
+                e.target.parentNode.appendChild(wrapper);
+
+                if (collection.length > 0) {
+                    for (var i = 0; i < collection.length; i++) {
+
+                        const val = this.form.city;
+                        let current = collection[i];
+                        const item = document.createElement("DIV");
+
+                        item.innerHTML = current.name;
+                        item.innerHTML += "<input type='hidden' value='" + current.name + "'>";
+
+                        item.addEventListener("click", function(e) {
+                            component.closeList();
+                            component.form.city = this.getElementsByTagName("input")[0].value;
+                        });
+
+                        wrapper.appendChild(item);
+                    }
+                }
+            },
+
+            closeList: function() {
+                const x = document.getElementsByClassName("autocomplete-items");
+                for (var i = 0; i < x.length; i++) {
+                    x[i].parentNode.removeChild(x[i]);
+                }
+            },
+
+            onKey(e) {
+
+                const wrapper = document.getElementsByClassName("autocomplete-items");
+                if (wrapper && wrapper.length > 0) {
+                    const elements = wrapper[0].getElementsByTagName('div');
+                    if (e.keyCode == 40) {
+                        this.focus++;
+                        this.setActive(elements);
+                    }
+
+                    if (e.keyCode == 30) {
+                        this.focus--;
+                        this.setActive(elements);
+                    }
+
+                    if (e.keyCode == 13) {
+                        if (this.focus > -1 && elements) {
+                            e.preventDefault();
+                            elements[this.focus].click();
+                        }
+                    }
+                }
+            },
+
+            setActive(elements) {
+                this.removeActive(elements);
+
+                if (this.focus >= elements.length) this.focus = 0;
+                if (this.focus < 0) this.focus = (elements.length - 1);
+                
+                elements[this.focus].classList.add("autocomplete-active");
+            },
+
+            removeActive(elements) {
+                for (var i = 0; i < elements.length; i++) {
+                    elements[i].classList.remove("autocomplete-active");
+                }
+            },
+
             fetchRegions() {
                 axios.get('/api/region/country/'+this.form.city.region.country.id)
                 .then(response => {
@@ -353,3 +457,50 @@
         }
     }
 </script>
+
+
+<style>
+    .autocomplete {
+      /*the container must be positioned relative:*/
+      position: relative;
+      display: inline-block;
+    }
+
+    .autocomplete-items {
+      position: absolute;
+      border: 1px solid #d4d4d4;
+      border-bottom: none;
+      border-top: none;
+      height: auto;
+      max-height: 400px;
+      overflow-y: auto;
+      z-index: 99;
+      /*position the autocomplete items to be the same width as the container:*/
+      top: 100%;
+      left: 0;
+      right: 0;
+    }
+
+    .autocomplete-items p {
+        padding: 10px;
+        text-align: center;
+    }
+
+    .autocomplete-items div {
+      padding: 10px;
+      cursor: pointer;
+      background-color: #fff;
+      border-bottom: 1px solid #d4d4d4;
+    }
+
+    .autocomplete-items div:hover {
+      /*when hovering an item:*/
+      background-color: #e9e9e9;
+    }
+
+    .autocomplete-active {
+      /*when navigating through the items using the arrow keys:*/
+      background-color: DodgerBlue !important;
+      color: #ffffff;
+    }
+</style>

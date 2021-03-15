@@ -132,8 +132,8 @@
 										<div class="text-xs font-weight-bold text-success text-uppercase mb-1">Organization</div>
 										<div class="h5 mb-0 font-weight-bold text-gray-800">You have been accepted!</div>
 									</div>
-									<div class="col-auto">
-										<a :href="'/organization/'+user.organization.id" target="__blank" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"><i class="fas fa-globe fa-sm text-white-50 mr-2"></i> Visit Organization Page</a>
+									<div class="col-auto" v-if="user.organization != null">
+										<a :href="'/organization/' + user.organization.id" target="__blank" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"><i class="fas fa-globe fa-sm text-white-50 mr-2"></i> Visit Organization Page</a>
 									</div>
 								</div>
 							</div>
@@ -160,15 +160,15 @@
 								</tr>
 								<tr>
 									<th>Phone</th>
-									<td>+{{ user.city.region.country.phone_index }}{{ user.phone_number }}</td>
+									<td>+{{ user.city.country.phone_index }}{{ user.phone_number }}</td>
 								</tr>
 								<tr>
 									<th>Country</th>
-									<td>{{ user.city.region.country.name }}</td>
+									<td>{{ user.city.country.name }}</td>
 								</tr>
 								<tr>
 									<th>Region</th>
-									<td>{{ user.city.region.name }}</td>
+									<td v-if="user.city.region != null">{{ user.city.region.name }}</td>
 								</tr>
 								<tr>
 									<th>City</th>
@@ -202,11 +202,12 @@
                         region: {
                             id: '',
                             name: '',
-                            country: {
-                                id: '',
-                                name: '',
-                                phone_index: ''
-                            }
+                        },
+
+                        country: {
+                            id: '',
+                            name: '',
+                            phone_index: ''
                         }
                     },
                     language: {
@@ -254,9 +255,7 @@
 	            axios.get('/api/user')
 	            .then(response => {
 	                this.user = response.data
-
 	                this.checkSocialMediaIntegration()
-
 	                this.checkOrganizationMembership()
 	            })
 	            .catch(err => {
@@ -266,7 +265,7 @@
 	                    text: 'Please check back later'
 	                })
 	                .then(() => {
-	                    //document.location.href = '/'
+	                    document.location.href = '/'
 	                })
 	            })
 	        },
@@ -329,7 +328,7 @@
 	        	}, 500)
 	        },
 	        fetchCountries() {
-                axios.get('/api/country')
+                axios.get('/api/all-countries')
                 .then(response => {
                     this.countries = response.data
                 })

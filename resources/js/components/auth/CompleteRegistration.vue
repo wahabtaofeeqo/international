@@ -27,8 +27,8 @@
                 </div>
 
                 <div class="col-sm-6">
-                    <input type="number" class="form-control form-control-user" id="BirthYear" placeholder="Year of Birth" min="1900" :max="currentYear" v-model.number="form.birth_year" :class="{ 'is-invalid': form.errors.has('birth_year') }" required>
-                    <has-error :form="form" field="birth_year"></has-error>
+                    <input type="number" class="form-control form-control-user" id="BirthYear" placeholder="Year of Birth" min="1900" :max="currentYear" v-model.number="form.birth_year" :class="{ 'is-invalid': form.errors.has('birth_year') }">
+                    <!-- <has-error :form="form" field="birth_year"></has-error> -->
                 </div>
             </div>
             <div class="form-group">
@@ -266,9 +266,11 @@
                     console.log('Could not fetch list of languages ' + err)
                 })
             },
+
             getPhoneIndex() {
                 this.phone_index = this.form.country.phone_index
             },
+
             getPhoto(e) {
                 let file = e.target.files[0];
                 var reader = new FileReader();
@@ -286,6 +288,7 @@
                     )
                 }
             },
+
             updateUser() {
                 const loader = this.$loading.show({
                     container: this.$parent.$refs.registration
@@ -341,7 +344,8 @@
       border: 1px solid #d4d4d4;
       border-bottom: none;
       border-top: none;
-      height: 400px;
+      height: auto;
+      max-height: 400px;
       overflow-y: auto;
       z-index: 99;
       /*position the autocomplete items to be the same width as the container:*/

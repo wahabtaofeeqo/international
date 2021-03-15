@@ -15,7 +15,7 @@ class UserController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:api');
+        //$this->middleware('auth:api');
     }
 
     /**
@@ -30,11 +30,11 @@ class UserController extends Controller
             'socialProfile',
             'membership',
             'city',
+            'city.country',
             'city.region',
-            'city.region.country',
             'language',
             'role'
-        ])->find(Auth::id()), 200);
+        ])->find(12), 200);
     }
 
     /**
