@@ -266,7 +266,7 @@
 	                    text: 'Please check back later'
 	                })
 	                .then(() => {
-	                    document.location.href = '/'
+	                    //document.location.href = '/'
 	                })
 	            })
 	        },

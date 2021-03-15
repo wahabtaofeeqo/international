@@ -22,8 +22,7 @@
 								<option :value="region" v-for="region in regions" :key="region.id">{{ region.name }}</option>
 							</select> -->
 
-							<input type="text" class="form-control form-control-user" id="test" placeholder="Start Typing" @change="getCities" v-model="city">
-
+			
 							<input type="text" class="form-control form-control-user" id="region" placeholder="Enter Region" v-model="form.region">
 
 							<input type="text" name="" id="name" class="form-control form-control-user" :class="{ 'is-invalid': form.errors.has('name') }" v-model.trim="form.name" placeholder="Name" required>
@@ -38,7 +37,7 @@
 						<has-error :form="form" field="region"></has-error>
 					</div>
 					<div class="form-group" v-show="geocoder">
-						<label class="small control-label text-danger">Something went wrong with the API. Please enter the latitude and longitude of {{ form.region.name }} manually</label>
+						<label class="small control-label text-danger">Something went wrong with the API. Please enter the latitude and longitude of {{ form.region }} manually</label>
 						<div class="input-group">
 							<input type="text" name="" id="latitude" class="form-control form-control-user" :class="{ 'is-invalid': form.errors.has('latitude') }" v-model.trim="form.latitude" placeholder="Latitude">
 							<input type="text" name="" id="longitude" class="form-control form-control-user" :class="{ 'is-invalid': form.errors.has('longitude') }" v-model.trim="form.longitude" placeholder="Longitude">
@@ -144,7 +143,6 @@
 		methods: {
 
 			getCities() {
-				console.log(this.city);
 				
 				if (this.city.length > 2) {
 					axios.get('/api/cities/' + this.city)
@@ -158,9 +156,9 @@
 			},
 
 			fetchCountries() {
-                axios.get('/api/country')
+                axios.get('/api/all-countries')
                 .then(response => {
-                    this.countries = response.data.data;
+                    this.countries = response.data;
                 })
                 .catch(err => {
                     console.log('Could not fetch list of countries ' + err)
@@ -240,8 +238,6 @@
             		container: this.$refs.formContainer
             	})
 
-            	console.log(this.form);
-
             	this.form.post('/api/city')
             	.then(response => {
             		Toast.fire({
@@ -267,11 +263,11 @@
             	})
             },
             editCity(city) {
+            	
             	this.form.fill(city)
 
-            	this.selectedCountry = city.region.country
+            	this.selectedCountry = city.country
             	this.fetchRegions()
-
             	this.edit = true
             },
             resetForm() {

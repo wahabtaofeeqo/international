@@ -13,7 +13,7 @@ class CityController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:api')->except('index', 'showRegionCities', 'cities');
+        $this->middleware('auth:api')->except('index', 'showRegionCities', 'cities', 'showCountryCities');
     }
 
     /**
@@ -77,13 +77,16 @@ class CityController extends Controller
 
         $this->validate($request, [
             'name' => 'required|string|unique:cities,name,'.$city->region_id,
-            'region.id' => 'required'
+            'region' => 'required'
         ]);
 
         $city->name = $request->name;
         $city->latitude = $request->latitude;
         $city->longitude = $request->longitude;
-        $city->region_id = $request->input('region.id');
+
+        $region = Region::firstOrCreate(['name' => $request->region], ['country_id' => $request->input('country.id')]);
+        $city->region_id = $region->id;
+
         $city->save();
 
         return response($city, 200);
@@ -125,12 +128,10 @@ class CityController extends Controller
         ])->where('country_id', $id)->get();
     }
 
-    public function cities($name) {
+    public function cities($name, $countryID = null) {
 
         return City::with([
             'region'
-        ])->whereLike('name', $name)->get();
-
-        //return response(array('message' => 'Hello'));
+        ])->whereLike('name', $name, 'country_id', $countryID)->limit(10)->get();
     }
 }

@@ -3,7 +3,7 @@
         <form class="user" @submit.prevent="updateUser" @keydown="form.onKeydown($event)" enctype="multipart/form-data">
             <div class="form-group row">
                 <div class="col-sm-6 mb-3 mb-sm-0">
-                    <select class="form-control form-control-user custom-select" v-model="selectedCountry" @change="handleCountry" required>
+                    <select class="form-control form-control-user custom-select" v-model="form.country" @change="handleCountry" required>
                         <option value="" disabled>Select your country</option>
                         <option :value="country" v-for="country in countries" :key="country.id">
                             {{ country.name }}
@@ -20,13 +20,12 @@
                 </div>
             </div>
             <div class="form-group row">
-                <div class="col-sm-6 mb-3 mb-sm-0">
-                    <select class="form-control form-control-user custom-select" v-model="form.city" :class="{ 'is-invalid': form.errors.has('city') }" required>
-                        <option value="" disabled>Select your city</option>
-                        <option :value="city" v-for="city in cities" :key="city.id">{{ city.name }}</option>
-                    </select>
+
+                <div class="col-sm-6 mb-3 mb-sm-0 autocomplete">
+                    <input type="text" class="form-control form-control-user" id="city" placeholder="Enter City" v-model="form.city" required @input="getCities($event)" @keydown="onKey($event)">
                     <has-error :form="form" field="city"></has-error>
                 </div>
+
                 <div class="col-sm-6">
                     <input type="number" class="form-control form-control-user" id="BirthYear" placeholder="Year of Birth" min="1900" :max="currentYear" v-model.number="form.birth_year" :class="{ 'is-invalid': form.errors.has('birth_year') }" required>
                     <has-error :form="form" field="birth_year"></has-error>
@@ -88,7 +87,9 @@
                     photo: '',
                     phone_number: '',
                     language: '',
+                    region: '',
                     city: '',
+                    country: ''
                 }),
 
                 countries: [],
@@ -103,13 +104,14 @@
 
                 user: {},
                 url: '/api/register/',
+
+                focus: -1,
             }
         },
         methods: {
             getUser() {
                 axios.get(this.url)
                 .then(response => {
-                    console.log(response);
                     this.fetchCountries()
                     this.fetchLanguages()
 
@@ -122,9 +124,9 @@
             },
 
             fetchCountries() {
-                axios.get('/api/country')
+                axios.get('/api/all-countries')
                 .then(response => {
-                    this.countries = response.data
+                    this.countries = response.data;
                 })
                 .catch(err => {
                     console.log('Could not fetch list of countries ' + err)
@@ -141,15 +143,109 @@
                 })
             },
 
-            // fetchCities() {
-            //     axios.get('/api/city/region/'+this.selectedRegion.id)
-            //     .then(response => {
-            //         this.cities = response.data
-            //     })
-            //     .catch(err => {
-            //         console.log('Could not fetch list of cities ' + err)
-            //     })
-            // },
+            getCities(e) {
+                if (this.form.city.length >= 2) {
+
+                    const url = (this.form.country == '') ? '/api/cities/' + this.form.city : '/api/cities/' + this.form.city + '/' + this.form.country.id;
+
+                    axios.get(url)
+                    .then(response => {
+                        this.autoComplete(e, response.data);
+                        console.log(response);
+                    })
+                    .catch(err => {
+                        console.log('Could not fetch list of cities ' + err)
+                    })
+                }
+                else {
+                    this.closeList();
+                }
+            },
+
+            autoComplete: function(e, collection) {
+
+                this.closeList();
+                if (collection.length == 0) return;
+
+                const input = e.target;
+                const wrapper = document.createElement("DIV");
+                wrapper.setAttribute("class", "autocomplete-items");
+
+                const component = this;
+                e.target.parentNode.appendChild(wrapper);
+
+                if (collection.length > 0) {
+                    for (var i = 0; i < collection.length; i++) {
+
+                        const val = this.form.city;
+                        let current = collection[i];
+                        const item = document.createElement("DIV");
+
+                        // if (current.name.substr(0, val.length).toUpperCase() == val.toUpperCase()) {
+                        //     b = "<strong>" + current.name.substr(0, val.length) + "</strong>";
+                        //     b.innerHTML += current.name.substr(val.length);
+                        //     b.innerHTML += "<input type='hidden' value='" + current.name + "'>";
+                        // }
+
+
+                        item.innerHTML = current.name;
+                        item.innerHTML += "<input type='hidden' value='" + current.name + "'>";
+
+                        item.addEventListener("click", function(e) {
+                            component.closeList();
+                            component.form.city = this.getElementsByTagName("input")[0].value;
+                        });
+
+                        wrapper.appendChild(item);
+                    }
+                }
+            },
+
+            closeList: function() {
+                const x = document.getElementsByClassName("autocomplete-items");
+                for (var i = 0; i < x.length; i++) {
+                    x[i].parentNode.removeChild(x[i]);
+                }
+            },
+
+            onKey(e) {
+
+                const wrapper = document.getElementsByClassName("autocomplete-items");
+                if (wrapper && wrapper.length > 0) {
+                    const elements = wrapper[0].getElementsByTagName('div');
+                    if (e.keyCode == 40) {
+                        this.focus++;
+                        this.setActive(elements);
+                    }
+
+                    if (e.keyCode == 30) {
+                        this.focus--;
+                        this.setActive(elements);
+                    }
+
+                    if (e.keyCode == 13) {
+                        if (this.focus > -1 && elements) {
+                            e.preventDefault();
+                            elements[this.focus].click();
+                        }
+                    }
+                }
+            },
+
+            setActive(elements) {
+                this.removeActive(elements);
+
+                if (this.focus >= elements.length) this.focus = 0;
+                if (this.focus < 0) this.focus = (elements.length - 1);
+                
+                elements[this.focus].classList.add("autocomplete-active");
+            },
+
+            removeActive(elements) {
+                for (var i = 0; i < elements.length; i++) {
+                    elements[i].classList.remove("autocomplete-active");
+                }
+            },
 
             fetchCities() {
                 axios.get('/api/city/country/'+this.selectedCountry.id)
@@ -171,7 +267,7 @@
                 })
             },
             getPhoneIndex() {
-                this.phone_index = this.selectedCountry.phone_index
+                this.phone_index = this.form.country.phone_index
             },
             getPhoto(e) {
                 let file = e.target.files[0];
@@ -203,7 +299,6 @@
                         text: 'You will be redirected now'
                     })
                     .then(() => {
-                        console.error(err)
                         document.location.href = '/home' 
                     })
                 })
@@ -219,7 +314,7 @@
             },
             handleCountry() {
                 //this.fetchRegions()
-                this.fetchCities();
+                //this.fetchCities();
                 this.getPhoneIndex()
             },
         },
@@ -233,3 +328,48 @@
         }
     }
 </script>
+
+<style>
+    .autocomplete {
+      /*the container must be positioned relative:*/
+      position: relative;
+      display: inline-block;
+    }
+
+    .autocomplete-items {
+      position: absolute;
+      border: 1px solid #d4d4d4;
+      border-bottom: none;
+      border-top: none;
+      height: 400px;
+      overflow-y: auto;
+      z-index: 99;
+      /*position the autocomplete items to be the same width as the container:*/
+      top: 100%;
+      left: 0;
+      right: 0;
+    }
+
+    .autocomplete-items p {
+        padding: 10px;
+        text-align: center;
+    }
+
+    .autocomplete-items div {
+      padding: 10px;
+      cursor: pointer;
+      background-color: #fff;
+      border-bottom: 1px solid #d4d4d4;
+    }
+
+    .autocomplete-items div:hover {
+      /*when hovering an item:*/
+      background-color: #e9e9e9;
+    }
+
+    .autocomplete-active {
+      /*when navigating through the items using the arrow keys:*/
+      background-color: DodgerBlue !important;
+      color: #ffffff;
+    }
+</style>

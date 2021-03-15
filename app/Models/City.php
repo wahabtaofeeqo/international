@@ -43,7 +43,11 @@ class City extends Model
         return $this->hasMany(Organization::class);
     }
 
-    public function scopeWhereLike($query, $column, $value) {
-        return $query->where($column, 'like', "% $value %");
+    public function scopeWhereLike($query, $city, $cityValue, $country, $countryID) {
+        if ($countryID != null) {
+            return $query->where($city, 'like', "% $cityValue %")->where($country, $countryID);
+        }
+
+        return $query->where($city, 'like', "% $cityValue %");
     }
 }

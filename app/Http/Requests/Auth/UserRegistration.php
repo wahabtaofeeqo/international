@@ -29,7 +29,7 @@ class UserRegistration extends FormRequest
             'phone_number' => 'required|digits_between:5,15',
             'photo' => 'required',
             'language.id' => 'required',
-            'city.id' => 'required',
+            'city' => 'required',
         ];
     }
 }

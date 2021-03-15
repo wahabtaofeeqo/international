@@ -112,9 +112,9 @@
 		},
 		methods: {
 			fetchCountries() {
-                axios.get('/api/country')
+                axios.get('/api/all-countries')
                 .then(response => {
-                    this.countries = response.data.data
+                    this.countries = response.data
                 })
                 .catch(err => {
                     console.log('Could not fetch list of countries ' + err)

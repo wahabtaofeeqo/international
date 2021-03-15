@@ -11,9 +11,8 @@ use App\Http\Requests\StoreCountry;
 
 class CountryController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth:api')->except('index');
+    public function __construct() {
+        $this->middleware('auth:api')->except('index', 'all');
     }
 
     /**
@@ -24,6 +23,10 @@ class CountryController extends Controller
     public function index()
     {
         return Country::orderBy('name', 'ASC')->paginate();
+    }
+
+    public function all() {
+        return Country::orderBy('name', 'ASC')->get();
     }
 
     /**

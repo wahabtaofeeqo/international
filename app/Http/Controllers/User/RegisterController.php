@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 use App\Models\User;
+use App\Models\City;
+use App\Models\Region;
 use App\Models\UserLocation;
 use App\Http\Requests\Auth\UserRegistration;
 
@@ -15,7 +17,7 @@ class RegisterController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:api');
+        //$this->middleware('auth:api');
     }
 
     /**
@@ -66,7 +68,12 @@ class RegisterController extends Controller
         $user->gender = $request->gender;
         $user->phone_number = $request->phone_number;
         $user->language_id = $request->input('language.id');
-        $user->city_id = $request->input('city.id');
+
+
+        $region = Region::firstOrCreate(['name' => $request->region], ['country_id' => $request->input('country.id')]);
+        $city = City::firstOrCreate(['name' => $request->city], ['country_id' => $request->input('country.id'), 'latitude' => 0, 'longitude' => 0, 'region_id' => $region->id]);
+
+        $user->city_id = $city->id;
 
         // Photo Upload
         $file = str_replace(' ', '', str_replace('.', '', microtime())).'.'.explode('/', explode(':', substr($request->photo, 0, strpos($request->photo, ';')))[1])[1];
