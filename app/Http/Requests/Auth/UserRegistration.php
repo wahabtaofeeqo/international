@@ -21,10 +21,11 @@ class UserRegistration extends FormRequest
      *
      * @return array
      */
+    //'birth_year' => 'required|integer|min:1900|max:'.date("Y")
+    
     public function rules()
     {
         return [
-            'birth_year' => 'required|integer|min:1900|max:'.date("Y"),
             'gender' => 'required|boolean',
             'phone_number' => 'required|digits_between:5,15',
             'photo' => 'required',
