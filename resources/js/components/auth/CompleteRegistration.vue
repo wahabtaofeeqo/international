@@ -43,7 +43,7 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text">{{ phone_index }}</span>
                     </div>
-                    <input type="tel" class="form-control form-control-user" id="PhoneNumber" placeholder="Phone number" v-model="form.phone_number" :class="{ 'is-invalid': form.errors.has('phone_number') }" required>
+                    <input type="tel" class="form-control form-control-user" id="PhoneNumber" placeholder="Phone number" v-model="form.phone_number" :class="{ 'is-invalid': form.errors.has('phone_number') }">
                     <has-error :form="form" field="phone_number"></has-error>
                 </div>
             </div>
@@ -61,9 +61,14 @@
                     <input type="radio" name="gender" class="custom-control-input" id="maleCheck" v-model="form.gender" :class="{ 'is-invalid': form.errors.has('gender') }" value="1" required>
                     <label class="custom-control-label" for="maleCheck">Male</label>
                 </div>
-                <div class="custom-control custom-radio">
-                    <input type="radio" name="gender" class="custom-control-input" id="femaleCheck" v-model="form.gender" :class="{ 'is-invalid': form.errors.has('gender') }" value="0" required>
+                <div class="custom-control custom-radio mr-sm-4">
+                    <input type="radio" name="gender" class="custom-control-input" id="femaleCheck" v-model="form.gender" :class="{ 'is-invalid': form.errors.has('gender') }" value="2" required>
                     <label class="custom-control-label" for="femaleCheck">Female</label>
+                </div>
+
+                <div class="custom-control custom-radio">
+                    <input type="radio" name="gender" class="custom-control-input" id="otherCheck" v-model="form.gender" :class="{ 'is-invalid': form.errors.has('gender') }" value="0" required>
+                    <label class="custom-control-label" for="otherCheck">Other</label>
                 </div>
                 <has-error :form="form" field="gender"></has-error>
             </div>

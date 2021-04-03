@@ -111,12 +111,15 @@
 
 					<div class="single-blog col-lg-4 col-md-4">
 						<div class="thumb">
-							<img class="f-img img-fluid mx-auto" src="{{ asset("images/posts/$post->featured_image") }}">
+							<a href="/organization/{{$post->organization_id}}/post/{{$post->id}}">
+								<img class="f-img img-fluid mx-auto" src="{{ asset("images/posts/$post->featured_image") }}">
+							</a>
+							
 						</div>
 						<div class="bottom d-flex justify-content-between align-items-center flex-wrap">
-							<div>
-								<img class="img-fluid" src="{{ asset('images/posts/$post->featured_image') }}" alt="">
-							 </div>
+							<!-- <div>
+								<img class="img-fluid" src="{{ asset("images/posts/$post->featured_image") }}" alt="">
+							 </div> -->
 
 							<div class="meta">
 								{{$post->created_at}}

@@ -84,19 +84,19 @@ class PagesController extends Controller
         return $organization;
     }
 
-    public function test() {
+    // public function test() {
 
         
-        return view('import');
-    }
+    //     return view('import');
+    // }
 
-    public function testPost(Request $request) {
+    // public function testPost(Request $request) {
         
-        $request->validate([
-            'file' => 'required']);
+    //     $request->validate([
+    //         'file' => 'required']);
 
-        Excel::import(new CityImport, $request->file('file'));
+    //     Excel::import(new CityImport, $request->file('file'));
 
-        return "Done";
-    }
+    //     return "Done";
+    // }
 }

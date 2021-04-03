@@ -3,13 +3,27 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-md-4">
-					<img :src="'/images/logos/'+$parent.organization.logo" alt="logo" width="75" height="75" class="img-fluid mb-3">
+					<img :src="'/images/logos/'+this.$parent.organization.logo" alt="logo" width="75" height="75" class="img-fluid mb-3">
 
-					<h3>About {{ $parent.organization.name }}</h3>
-					<p>{{ $parent.organization.slogan }}</p>
+					<h3>About {{ this.$parent.organization.name }}</h3>
+					<p class="text-muted">{{ this.$parent.organization.slogan }}</p>
 					<p>
 						<i class="icon-map mr-3"></i>
-						{{ $parent.organization.address }}, {{ $parent.organization.city.name }}, {{ $parent.organization.city.region.name }}, {{ $parent.organization.city.region.country.name }}
+						<span>
+							{{ this.$parent.organization.address }}
+						</span>
+
+						<span v-if="this.$parent.organization.city != null">
+							{{ this.$parent.organization.city.name }}
+						</span>
+
+						<span v-if="this.$parent.organization.city != null && this.$parent.organization.city.region != null">
+							{{ this.$parent.organization.city.region.name }}
+						</span>
+
+						<span v-if="this.$parent.organization.city != null && this.$parent.organization.city.country != null">
+							{{ this.$parent.organization.city.country.name }}
+						</span>
 					</p>
 				</div>
 
@@ -60,6 +74,7 @@
 				}),
 			}
 		},
+
 		methods: {
 			fetchLanguages() {
                 axios.get('/api/language')
@@ -95,10 +110,17 @@
 			},
 		},
 		created() {
-			this.fetchLanguages()
+			this.fetchLanguages();
 		},
 		mounted() {
 
+		},
+
+		computed: {
+			organization: function() {
+				const org = this.$parent.organization;
+				return org;
+			}
 		}
 	}
 </script>

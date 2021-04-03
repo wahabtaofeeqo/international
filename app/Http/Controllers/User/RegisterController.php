@@ -76,9 +76,12 @@ class RegisterController extends Controller
         $user->city_id = $city->id;
 
         // Photo Upload
-        $file = str_replace(' ', '', str_replace('.', '', microtime())).'.'.explode('/', explode(':', substr($request->photo, 0, strpos($request->photo, ';')))[1])[1];
-        \Image::make($request->photo)->save(public_path('images/avatars/'.$file));
-        $user->photo = $file;
+        if ($request->photo) {
+            
+            $file = str_replace(' ', '', str_replace('.', '', microtime())).'.'.explode('/', explode(':', substr($request->photo, 0, strpos($request->photo, ';')))[1])[1];
+            \Image::make($request->photo)->save(public_path('images/avatars/'.$file));
+            $user->photo = $file;
+        }
 
         $user->save();
 

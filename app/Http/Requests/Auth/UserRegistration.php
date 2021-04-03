@@ -26,9 +26,9 @@ class UserRegistration extends FormRequest
     public function rules()
     {
         return [
-            'gender' => 'required|boolean',
-            'phone_number' => 'required|digits_between:5,15',
-            'photo' => 'required',
+            // 'gender' => 'required|integer',
+            // 'phone_number' => 'required|digits_between:5,15',
+            // 'photo' => 'required',
             'language.id' => 'required',
             'city' => 'required',
         ];

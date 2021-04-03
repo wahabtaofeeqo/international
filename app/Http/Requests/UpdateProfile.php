@@ -25,10 +25,10 @@ class UpdateProfile extends FormRequest
     {
         return [
             'name' => 'required|string',
-            'birth_year' => 'required|integer|min:1900|max:'.date("Y"),
-            'gender' => 'required|boolean',
-            'phone_number' => 'required|digits_between:5,15',
-            'photo' => 'required',
+            // 'birth_year' => 'required|integer|min:1900|max:'.date("Y"),
+            // 'gender' => 'required|integer',
+            // 'phone_number' => 'required|digits_between:5,15',
+            // 'photo' => 'required',
             'language.id' => 'required',
             'city.id' => 'required',
         ];

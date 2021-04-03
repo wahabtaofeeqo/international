@@ -10,7 +10,7 @@ class OrganizationController extends Controller
 {
     public function index($id)
     {
-    	$organization = Organization::with('city', 'city.region', 'city.region.country')->findOrFail($id);
+    	$organization = Organization::with('city', 'city.region', 'city.region.country', 'city.country')->findOrFail($id);
 
     	return response($organization, 200);
     }

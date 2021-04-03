@@ -34,7 +34,7 @@ class UserController extends Controller
             'city.region',
             'language',
             'role'
-        ])->find(12), 200);
+        ])->find(Auth::id()), 200);
     }
 
     /**

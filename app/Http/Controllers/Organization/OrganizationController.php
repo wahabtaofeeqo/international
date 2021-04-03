@@ -27,7 +27,7 @@ class OrganizationController extends Controller
      */
     public function index()
     {
-        $organization = Organization::with('city', 'city.region', 'city.region.country')->where('id', Auth::user()->organization->id)->first();
+        $organization = Organization::with('city', 'city.region', 'city.region.country', 'city.country')->where('id', Auth::user()->organization->id)->first();
 
         return response($organization, 200);
     }
