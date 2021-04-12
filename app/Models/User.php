@@ -7,6 +7,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
 
+
 class User extends Authenticatable
 {
     use Notifiable, HasApiTokens;
@@ -17,7 +18,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'birth_year', 'gender', 'phone_number', 'password', 'photo', 'subscribed', 'language_id', 'city_id', 'organization_id', 'role_id',
+        'name', 'email', 'birth_year', 'gender', 'phone_number', 'password', 'photo', 'subscribed', 'language_id', 'city_id', 'organization_id', 'role_id', 'projects',
     ];
 
     /**

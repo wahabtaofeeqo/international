@@ -124,5 +124,5 @@ Route::get('/register/{path}', function() {
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-Route::get('/test', 'PagesController@test');
-Route::post('/test', 'PagesController@testPost');
+// Route::get('/test', 'PagesController@test');
+// Route::post('/test', 'PagesController@testPost');

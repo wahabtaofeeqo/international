@@ -3,7 +3,8 @@
         <form class="user" @submit.prevent="updateUser" @keydown="form.onKeydown($event)" enctype="multipart/form-data">
             <div class="form-group row">
                 <div class="col-sm-6 mb-3 mb-sm-0">
-                    <select class="form-control form-control-user custom-select" v-model="form.country" @change="handleCountry" required>
+                    <span class="text-danger" style="">*</span>
+                    <select class="form-control mt-0 form-control-user custom-select" v-model="form.country" @change="handleCountry" required>
                         <option value="" disabled>Select your country</option>
                         <option :value="country" v-for="country in countries" :key="country.id">
                             {{ country.name }}
@@ -11,6 +12,7 @@
                     </select>
                 </div>
                 <div class="col-sm-6">
+                    <span class="text-danger">&nbsp;</span>
                     <!-- <select class="form-control form-control-user custom-select" v-model="selectedRegion" @change="fetchCities" required>
                         <option value="" disabled>Select your region</option>
                         <option :value="region" v-for="region in regions" :key="region.id"> {{ region.name }}</option>
@@ -22,23 +24,26 @@
             <div class="form-group row">
 
                 <div class="col-sm-6 mb-3 mb-sm-0 autocomplete">
+                    <span class="text-danger" style="">*</span>
                     <input type="text" class="form-control form-control-user" id="city" placeholder="Enter City" v-model="form.city" required @input="getCities($event)" @keydown="onKey($event)">
                     <has-error :form="form" field="city"></has-error>
                 </div>
 
                 <div class="col-sm-6">
+                    <span class="text-danger">&nbsp;</span>
                     <input type="number" class="form-control form-control-user" id="BirthYear" placeholder="Year of Birth" min="1900" :max="currentYear" v-model.number="form.birth_year" :class="{ 'is-invalid': form.errors.has('birth_year') }">
                     <!-- <has-error :form="form" field="birth_year"></has-error> -->
                 </div>
             </div>
             <div class="form-group">
-                <select class="form-control form-control-user custom-select" v-model="form.language" :class="{ 'is-invalid': form.errors.has('language') }" required>
+                <select class="form-control form-control-user custom-select" v-model="form.language" :class="{ 'is-invalid': form.errors.has('language') }">
                     <option value="" disabled>Choose a preferred language for information and notifications</option>
                     <option :value="language" v-for="language in languages" :key="language.id">{{ language.name }}</option>
                 </select>
                 <has-error :form="form" field="language"></has-error>
             </div>
-            <div class="form-group">
+
+            <div class="form-group d-none" style="display: none;">
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
                         <span class="input-group-text">{{ phone_index }}</span>
@@ -56,6 +61,8 @@
                 </div>
                 <has-error :form="form" field="photo"></has-error>
             </div>
+
+            <p class="mb-0 text-danger">*</p>
             <div class="form-group form-inline">
                 <div class="custom-control custom-radio mr-sm-4">
                     <input type="radio" name="gender" class="custom-control-input" id="maleCheck" v-model="form.gender" :class="{ 'is-invalid': form.errors.has('gender') }" value="1" required>
@@ -72,6 +79,12 @@
                 </div>
                 <has-error :form="form" field="gender"></has-error>
             </div>
+
+            <div class="form-group">
+                <label for="question">What Project(s) would you like to be funded by ILA?</label>
+                <textarea class="form-control" placeholder="Answer..." name="project" v-model="form.project"></textarea>
+            </div>
+
 
             <button :disabled="form.busy" type="submit" class="btn btn-primary btn-user btn-block">
                 Complete Registration&nbsp;<i class="fas fa-thumbs-up"></i>
@@ -94,7 +107,8 @@
                     language: '',
                     region: '',
                     city: '',
-                    country: ''
+                    country: '',
+                    project: '',
                 }),
 
                 countries: [],
@@ -156,7 +170,6 @@
                     axios.get(url)
                     .then(response => {
                         this.autoComplete(e, response.data);
-                        console.log(response);
                     })
                     .catch(err => {
                         console.log('Could not fetch list of cities ' + err)
@@ -301,6 +314,7 @@
 
                 this.form.put(this.url + this.user.id)
                 .then(response => {
+                    console.log(response);
                     Swal.fire({
                         type: 'success',
                         title: 'Your account is now active!',
@@ -314,7 +328,9 @@
                     Toast.fire({
                         type: 'error',
                         title: 'We could not update your data'
-                    })
+                    });
+
+                    console.log(err);
                 })
                 .finally(() => {
                     loader.hide()
@@ -323,7 +339,7 @@
             handleCountry() {
                 //this.fetchRegions()
                 //this.fetchCities();
-                this.getPhoneIndex()
+                this.getPhoneIndex();
             },
         },
         created() {
