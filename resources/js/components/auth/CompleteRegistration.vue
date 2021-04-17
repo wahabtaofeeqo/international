@@ -12,7 +12,7 @@
                     </select>
                 </div>
                 <div class="col-sm-6">
-                    <span class="text-danger">&nbsp;</span>
+                    <span class="text-danger">*</span>
                     <!-- <select class="form-control form-control-user custom-select" v-model="selectedRegion" @change="fetchCities" required>
                         <option value="" disabled>Select your region</option>
                         <option :value="region" v-for="region in regions" :key="region.id"> {{ region.name }}</option>

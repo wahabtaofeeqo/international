@@ -70,10 +70,19 @@ class RegisterController extends Controller
         $user->language_id = $request->input('language.id');
         $user->projects = $request->project;
 
-
-        $region = Region::firstOrCreate(['name' => $request->region], ['country_id' => $request->input('country.id')]);
+        $region = null;
+        if (!empty($request->region)) {
+            $region = Region::firstOrCreate(['name' => $request->region], [
+                'name' => $request->region, 
+                'country_id' => $request->input('country.id')]);
+        }
         
-        $city = City::firstOrCreate(['name' => $request->city], ['country_id' => $request->input('country.id'), 'latitude' => 0, 'longitude' => 0, 'region_id' => $region->id]);
+        $city = City::firstOrCreate(['name' => $request->city], [
+            'name' => $request->city,
+            'country_id' => $request->input('country.id'), 
+            'latitude' => 0, 
+            'longitude' => 0, 
+            'region_id' => ($region != null) ? $region->id : 0]);
 
         $user->city_id = $city->id;
 
